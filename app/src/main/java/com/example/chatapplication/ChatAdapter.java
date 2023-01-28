@@ -9,8 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
-    private String[] localDataSet;
+    private ArrayList<ChatData> chatDataArrayList = new ArrayList<>();
 
     // ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -25,8 +27,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     }
 
     // Adapter 데이터 초기화
-    public ChatAdapter(String[] dataSet) {
-        localDataSet = dataSet;
+    public ChatAdapter(ArrayList<ChatData> dataSet) {
+        chatDataArrayList = dataSet;
     }
 
     @NonNull
@@ -40,11 +42,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ChatAdapter.ViewHolder holder, int position) {
-        holder.getTextView().setText(localDataSet[position]);
+        holder.getTextView().setText(chatDataArrayList.get(position).getMsg());
     }
 
     @Override
     public int getItemCount() {
-        return localDataSet.length;
+        return chatDataArrayList.size();
     }
 }
