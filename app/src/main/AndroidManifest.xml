@@ -30,6 +30,9 @@
             android:name=".ChatActivity"
             android:exported="true">
         </activity>
+        <activity android:name="com.example.chatapplication.login.JoinActivity" />
+        <activity android:name="com.example.chatapplication.login.LoginActivity" />
+        <activity android:name="com.example.chatapplication.login.SearchActivity" />
 
     </application>
 
