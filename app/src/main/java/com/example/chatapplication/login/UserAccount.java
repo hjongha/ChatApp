@@ -1,5 +1,6 @@
 package com.example.chatapplication.login;
 
+// DB에 등록된 사용자 상세 정보 클래스
 public class UserAccount {
     private String Uid;
     private String email;
