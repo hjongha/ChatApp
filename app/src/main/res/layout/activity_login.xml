@@ -61,10 +61,9 @@
                     android:layout_width="130dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="10dp"
-                    android:background="#00ff0000"
+                    android:backgroundTint="#909090"
                     android:layout_marginStart="5dp"
                     android:text="회원 가입"
-                    android:backgroundTint="#909090"
                     android:textColor="@color/black" />
 
                 <Button

@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+// 회원 가입 액티비티
 public class JoinActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;                 // 파이어베이스 인증
     private DatabaseReference mDatabaseRef;             // 실시간 데이터베이스
@@ -58,6 +59,7 @@ public class JoinActivity extends AppCompatActivity {
                             account.setPassword(strPwd);
                             account.setName(strName);
 
+                            // 사용자 정보를 DB에 저장
                             mDatabaseRef.child("UserAccount").child(account.getUid()).setValue(account);
 
                             Toast.makeText(JoinActivity.this, "회원가입에 성공하셨습니다.", Toast.LENGTH_SHORT).show();

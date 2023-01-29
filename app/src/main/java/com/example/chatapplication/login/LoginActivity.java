@@ -19,10 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+// 로그인 액티비티
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;         // 파이어베이스 인증
-    private FirebaseDatabase database;
-    private DatabaseReference mDatabaseRef;     // 실시간 데이터베이스
     private EditText mEtId, mEtPwd;          // 로그인 입력필드
     private Intent intent;
 
@@ -35,9 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mEtId = (EditText) findViewById(R.id.et_id);
         mEtPwd = (EditText) findViewById(R.id.et_pwd);
-
-        database = FirebaseDatabase.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("member").child("UserAccount");
 
         // 로그인 버튼
         Button btn_login = findViewById(R.id.btn_login);
