@@ -6,6 +6,11 @@ import java.util.Calendar;
 public class ChatData {
     private String uid;
     private String msg;
+    private String timer;
+
+    public String getTimer() {return timer;}
+
+    public void setTimer(String timer) {this.timer = timer;}
 
     public String getUid() {return uid;}
 

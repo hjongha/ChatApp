@@ -22,7 +22,8 @@
 
         <activity
             android:name=".ChatActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
         </activity>
 
         <activity
@@ -37,7 +38,8 @@
 
         <activity android:name="com.example.chatapplication.login.JoinActivity" />
         <activity android:name="com.example.chatapplication.login.SearchActivity" />
-        <activity android:name="com.example.chatapplication.FndListActivity" />
+        <activity android:name="com.example.chatapplication.FndListActivity"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name="com.example.chatapplication.ChatListActivity" />
 
     </application>

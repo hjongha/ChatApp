@@ -2,17 +2,22 @@ package com.example.chatapplication;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,8 +70,10 @@ public class ChatActivity extends AppCompatActivity {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ImageView imageView = (ImageView) findViewById(R.id.image_chat);
+                imageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseimg));
                 TextView textView = (TextView) findViewById(R.id.text_test);
-                textView.setText(" " + snapshot.getValue(String.class));
+                textView.setText(snapshot.getValue(String.class));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
@@ -81,15 +88,18 @@ public class ChatActivity extends AppCompatActivity {
                 String chatroomKey = "";
                 Button btn_send = (Button) findViewById(R.id.btn_send);
                 EditText editText = (EditText) findViewById(R.id.editText);
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String[] uidList = new String[2];
                     uidList = dataSnapshot.getKey().split(" ");
                     if (uidList[0].equals(myUid) && uidList[1].equals(otherUid)) {
+                        // 나와 상대방과의 채팅방이 이미 존재할 경우
                         chatroomKey = dataSnapshot.getKey();
                         newChat = false;
                         break;
                     }
                     else if (uidList[0].equals(otherUid) && uidList[1].equals(myUid)) {
+                        // 나와 상대방과의 채팅방이 이미 존재할 경우
                         chatroomKey = dataSnapshot.getKey();
                         newChat = false;
                         break;
@@ -97,6 +107,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
                 if (newChat) {
+                    // 나와 상대방과의 채팅방이 기존에 없는 경우
                     chatroomKey = myUid + " " + otherUid;
                 }
 
@@ -110,9 +121,12 @@ public class ChatActivity extends AppCompatActivity {
                         ChatData chatData = new ChatData();
                         chatData.setMsg(snapshot.child("msg").getValue(String.class));
                         chatData.setUid(snapshot.child("uid").getValue(String.class));
+                        chatData.setTimer(snapshot.getKey());
 
                         chatDataArrayList.add(chatData);
                         mAdapter.notifyDataSetChanged();
+                        // 채팅방 포커스를 아래로
+                        recyclerView.scrollToPosition(chatDataArrayList.size()-1);
                     }
 
                     @Override
@@ -158,6 +172,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+
 }
 
 
