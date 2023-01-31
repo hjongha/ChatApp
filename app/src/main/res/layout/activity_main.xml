@@ -4,32 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".main.MainActivity">
 
-    <Button
-        android:id="@+id/btn_fnd"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:text="친구"
-        android:backgroundTint="#909090"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_Navi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemIconTint="#000000"
+        app:itemTextColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.335" />
+        app:menu="@menu/bottom_menu" />
 
-    <Button
-        android:id="@+id/btn_chat"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:text="채팅"
-        android:backgroundTint="#909090"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="669dp"
+        android:id="@+id/main_frame"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_Navi"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_fnd"
-        app:layout_constraintVertical_bias="0.314" />
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
