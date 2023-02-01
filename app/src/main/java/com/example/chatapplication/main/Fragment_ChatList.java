@@ -73,7 +73,6 @@ public class Fragment_ChatList extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent intent = new Intent(context, ChatActivity.class);
-                        intent.putExtra("myUid", firebaseUser.getUid());
                         intent.putExtra("otherUid", uidArrayList.get(position));
                         startActivity(intent);
                     }
