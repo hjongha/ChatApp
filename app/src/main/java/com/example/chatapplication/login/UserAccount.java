@@ -2,14 +2,19 @@ package com.example.chatapplication.login;
 
 // DB에 등록된 사용자 상세 정보 클래스
 public class UserAccount {
-    private String Uid;
+    private String uid;
     private String email;
     private String password;
     private String name;
+    private String auth_answer;
 
-    public String getUid() {return Uid;}
+    public String getAuth_answer() {return auth_answer;}
 
-    public void setUid(String uid) {Uid = uid;}
+    public void setAuth_answer(String auth_answer) {this.auth_answer = auth_answer;}
+
+    public String getUid() {return uid;}
+
+    public void setUid(String uid) {this.uid = uid;}
 
     public String getEmail() {return email;}
 

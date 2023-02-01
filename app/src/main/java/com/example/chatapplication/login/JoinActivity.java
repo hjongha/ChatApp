@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class JoinActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;                 // 파이어베이스 인증
     private DatabaseReference mDatabaseRef;             // 실시간 데이터베이스
-    private EditText mEtEmail, mEtPwd, mEtName;          // 회원가입 입력필드
+    private EditText mEtEmail, mEtPwd, mEtName, mEtAnswer;          // 회원가입 입력필드
     private Button mBtnRegister;                        // 회원가입 버튼
 
     @Override
@@ -37,6 +37,8 @@ public class JoinActivity extends AppCompatActivity {
         mEtEmail = findViewById(R.id.et_id);
         mEtPwd = findViewById(R.id.et_pwd);
         mEtName = findViewById(R.id.et_name);
+        mEtAnswer = findViewById(R.id.et_answer);
+
         mBtnRegister = findViewById(R.id.btn_register2);
 
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
@@ -46,32 +48,38 @@ public class JoinActivity extends AppCompatActivity {
                 String strEmail = mEtEmail.getText().toString();
                 String strPwd = mEtPwd.getText().toString();
                 String strName = mEtName.getText().toString();
+                String strAnswer = mEtAnswer.getText().toString();
 
-                // Firebase Auth 진행
-                mFirebaseAuth.createUserWithEmailAndPassword(strEmail, strPwd).addOnCompleteListener(JoinActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
-                            UserAccount account = new UserAccount();
-                            account.setUid(firebaseUser.getUid());
-                            account.setEmail(strEmail);
-                            account.setPassword(strPwd);
-                            account.setName(strName);
+                if (strEmail.isEmpty() || strPwd.isEmpty() || strName.isEmpty() || strAnswer.isEmpty()) {
+                    Toast.makeText(JoinActivity.this, "회원 정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    // 입력한 정보를 DB에 저장
+                    mFirebaseAuth.createUserWithEmailAndPassword(strEmail, strPwd).addOnCompleteListener(JoinActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+                                UserAccount account = new UserAccount();
+                                account.setUid(firebaseUser.getUid());
+                                account.setEmail(strEmail);
+                                account.setPassword(strPwd);
+                                account.setName(strName);
+                                account.setAuth_answer(strAnswer);
 
-                            // 사용자 정보를 DB에 저장
-                            mDatabaseRef.child("UserAccount").child(account.getUid()).setValue(account);
+                                // 사용자 정보를 DB에 저장
+                                mDatabaseRef.child("UserAccount").child(account.getUid()).setValue(account);
 
-                            Toast.makeText(JoinActivity.this, "회원가입에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
+                                Toast.makeText(JoinActivity.this, "회원가입에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(JoinActivity.this, "회원가입에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else {
-                            Toast.makeText(JoinActivity.this, "회원가입에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                    });
+                }
             }
         });
     }

@@ -14,11 +14,13 @@ import com.example.chatapplication.R;
 
 public class Fragment_Settings extends Fragment {
     private View view;
+    Context context;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
+        context = getActivity().getApplicationContext();
 
         return view;
     }
