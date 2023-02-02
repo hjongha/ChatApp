@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -57,17 +58,23 @@ public class MainActivity extends AppCompatActivity {
             case 0:
                 fragmentTransaction.replace(R.id.main_frame, frag_fndList);
                 fragmentTransaction.commit();
-                System.out.println("setFrag 0");
+                findViewById(R.id.menu_person).setBackgroundColor(0xFFE0E0E0);
+                findViewById(R.id.menu_chat).setBackgroundColor(0xFFFFFFFF);
+                findViewById(R.id.menu_settings).setBackgroundColor(0xFFFFFFFF);
                 break;
             case 1:
                 fragmentTransaction.replace(R.id.main_frame, frag_chatList);
                 fragmentTransaction.commit();
-                System.out.println("setFrag 1");
+                findViewById(R.id.menu_person).setBackgroundColor(0xFFFFFFFF);
+                findViewById(R.id.menu_chat).setBackgroundColor(0xFFE0E0E0);
+                findViewById(R.id.menu_settings).setBackgroundColor(0xFFFFFFFF);
                 break;
             case 2:
                 fragmentTransaction.replace(R.id.main_frame, frag_settings);
                 fragmentTransaction.commit();
-                System.out.println("setFrag 2");
+                findViewById(R.id.menu_person).setBackgroundColor(0xFFFFFFFF);
+                findViewById(R.id.menu_chat).setBackgroundColor(0xFFFFFFFF);
+                findViewById(R.id.menu_settings).setBackgroundColor(0xFFE0E0E0);
                 break;
         }
     }

@@ -48,7 +48,10 @@
             tools:ignore="Instantiatable" />
         <activity android:name="com.example.chatapplication.main.Fragment_ChatList"
             tools:ignore="Instantiatable" />
-
+        <activity android:name="com.example.chatapplication.main.Fragment_Settings"
+            tools:ignore="Instantiatable" />
+        <activity android:name="com.example.chatapplication.main.Search_Friend" />
+        <activity android:name="com.example.chatapplication.main.Add_Friend" />
 
     </application>
 

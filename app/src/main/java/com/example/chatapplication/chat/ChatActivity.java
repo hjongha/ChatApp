@@ -181,13 +181,11 @@ public class ChatActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // 채팅방 재입장 시 알림 삭제
+        // 채팅방 재입장 시 알림 삭제 및 비활성화
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.deleteNotificationChannel("0");
-        }
-
+        notificationManager = null;
+        channel = null;
     }
 
     @Override
@@ -204,7 +202,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 // 전송된 문자가 상대로부터 온 경우
                 if (snapshot.child("uid").getValue(String.class).equals(otherUid)) {
-                    my_intent.putExtra("msg", snapshot.child("msg").getValue(String.class));
+                    String str_msg =  snapshot.child("msg").getValue(String.class);
                     my_intent.putExtra("otherUid", otherUid);
 
                     if (Build.VERSION.SDK_INT >= 26) {
@@ -216,7 +214,6 @@ public class ChatActivity extends AppCompatActivity {
                     else {
                         builder = new NotificationCompat.Builder(ChatActivity.this);
                         pendingIntent = (PendingIntent.getActivity(ChatActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT));
-
                     }
 
                     // 상대방 이름 추출 후 알림 세팅, 등록
@@ -228,7 +225,7 @@ public class ChatActivity extends AppCompatActivity {
 
                             builder.setSmallIcon(R.drawable.ic_baseline_chat_24)
                                     .setContentTitle(user_name)                                     // 상대 이름
-                                    .setContentText(snapshot.child("msg").getValue(String.class))   // 메시지
+                                    .setContentText(str_msg)                                        // 메시지
                                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)               // 알림 우선 순위
                                     .setAutoCancel(true)                                            // 알림 선택 시 알림 자동 삭제
                                     .setContentIntent(pendingIntent);                               // 알림 선택 시 채팅방으로 이동

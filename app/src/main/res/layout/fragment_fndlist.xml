@@ -13,39 +13,56 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="75dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="  내 정보"
+            android:textColor="#C0C0C0"
+            android:textSize="13dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp">
 
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="315dp"
+            <ImageView
+                android:id="@+id/image_fndlist"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="사용자를 검색합니다."
-                app:layout_constraintBottom_toTopOf="@+id/listView_menu"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:translationX="10dp"/>
 
-            <Button
-                android:id="@+id/search_btn"
-                android:layout_width="70dp"
+            <TextView
+                android:id="@+id/text_fndlist"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:text="검색"
-                android:backgroundTint="#909090"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="test"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:translationX="5dp"
+                app:layout_constraintStart_toEndOf="@+id/image_fndlist"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#999999" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="  내 친구"
+            android:textColor="#C0C0C0"
+            android:textSize="13dp"
+            android:layout_marginTop="10dp"/>
+
         <ListView
-            android:id="@+id/listView_menu"
+            android:id="@+id/listView_fndlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
