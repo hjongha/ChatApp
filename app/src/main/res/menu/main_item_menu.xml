@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="search_friend"
+        android:icon="@drawable/ic_baseline_person_search_24"
+        android:id="@+id/searchF_item"
+        app:showAsAction="ifRoom"/>
+
+    <item android:title="add_friend"
+        android:icon="@drawable/ic_baseline_person_add_alt_1_24"
+        android:id="@+id/addF_item"
+        app:showAsAction="ifRoom"/>
+
+
+    <item android:title="remove_friend"
+        android:icon="@drawable/ic_baseline_person_remove_24"
+        android:id="@+id/removeF_item"
+        app:showAsAction="ifRoom"/>
+</menu>
