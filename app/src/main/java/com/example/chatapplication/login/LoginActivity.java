@@ -1,6 +1,7 @@
 package com.example.chatapplication.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chatapplication.main.MainActivity;
@@ -17,16 +19,58 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Map;
+import java.util.Set;
+
 // 로그인 액티비티
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;         // 파이어베이스 인증
     private EditText mEtId, mEtPwd;          // 로그인 입력필드
     private Intent intent;
+    SharedPreferences auto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        auto = new SharedPreferences() {        // SharedPreferences 객체 생성
+            @Override
+            public Map<String, ?> getAll() {return null;}
+
+            @Nullable
+            @Override
+            public String getString(String key, @Nullable String defValue) {return null;}
+
+            @Nullable
+            @Override
+            public Set<String> getStringSet(String key, @Nullable Set<String> defValues) {return null;}
+
+            @Override
+            public int getInt(String key, int defValue) {return 0;}
+
+            @Override
+            public long getLong(String key, long defValue) {return 0;}
+
+            @Override
+            public float getFloat(String key, float defValue) {return 0;}
+
+            @Override
+            public boolean getBoolean(String key, boolean defValue) {return false;}
+
+            @Override
+            public boolean contains(String key) {return false;}
+
+            @Override
+            public Editor edit() {return null;}
+
+            @Override
+            public void registerOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {}
+
+            @Override
+            public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {}
+        };
+        auto = getSharedPreferences("autoLogin", MODE_PRIVATE);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -51,10 +95,17 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // 로그인 성공
+                                // 자동 로그인 변수, 값 저장
+                                SharedPreferences.Editor autoLogin = auto.edit();
+                                autoLogin.putString("auto_Id", strId);
+                                autoLogin.putString("auto_Pwd", strPwd);
+                                autoLogin.commit();
+
                                 intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
-                            } else {
+                            }
+                            else {
                                 Toast.makeText(LoginActivity.this, "이메일 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
                             }
                         }

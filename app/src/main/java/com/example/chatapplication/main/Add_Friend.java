@@ -87,6 +87,7 @@ public class Add_Friend extends AppCompatActivity {
                                         myRef = database.getReference("friend").child(firebaseUser.getUid());
                                         myRef.child(uidList.get(position)).setValue(nameList.get(position));
                                         Toast.makeText(Add_Friend.this, "친구 추가가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                        finish();
                                     }
                                 });
                                 dlg.show();
