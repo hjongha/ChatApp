@@ -51,6 +51,7 @@ public class Fragment_FndList extends Fragment {
         inflater.inflate(R.menu.main_item_menu, menu);
     }
 
+    // MenuItem (옵션메뉴) 선택 시 각 액티비티 시작
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
@@ -66,7 +67,8 @@ public class Fragment_FndList extends Fragment {
                 return true;
 
             case R.id.removeF_item:
-
+                intent = new Intent(context, Remove_Friend.class);
+                startActivity(intent);
                 return true;
         }
         return false;

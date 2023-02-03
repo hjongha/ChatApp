@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ import java.util.Hashtable;
 // 채팅 액티비티
 public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
+    ArrayList<ChatData> chatDataArrayList;
     ChatAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
@@ -68,18 +70,16 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.item_menu, menu);
-
         return true;
     }
 
     // MenuItem (우측 위 옵션메뉴) 선택 리스너
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        AlertDialog.Builder dlg = new AlertDialog.Builder(ChatActivity.this);
         switch (item.getItemId()) {
             case R.id.delete_msg:
                 // 대화 내용 삭제
-                AlertDialog.Builder dlg = new AlertDialog.Builder(ChatActivity.this);
-
                 dlg.setTitle("대화 내용 삭제 확인");
                 dlg.setMessage("대화 내용을 삭제하시겠습니까?");
                 dlg.setPositiveButton("아니오", new DialogInterface.OnClickListener() {
@@ -92,18 +92,46 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         myRef = database.getReference("chatroom").child(myUid).child(otherUid);
-                        myRef.removeValue();
+                        myRef.setValue("");
                         Toast.makeText(ChatActivity.this, "대화 내용이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     }
                 });
                 dlg.show();
                 return true;
 
-            case R.id.menu_item1:
+            case R.id.delete_room:
+                // 채팅방 나가기
+                dlg.setTitle("채팅방 나가기 확인");
+                dlg.setMessage("정말 채팅방을 나가시겠습니까?\n방을 나가면 채팅 내용이 삭제됩니다.");
+                dlg.setPositiveButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(ChatActivity.this, "취소하였습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dlg.setNegativeButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String dateTime = dateFormat.format(calendar.getTime());
+
+                        Hashtable<String, String> talks = new Hashtable<String, String>();
+                        talks.put("uid", myUid);
+                        talks.put("msg", "");
+
+                        myRef = database.getReference("chatroom").child(otherUid).child(myUid);
+                        myRef.child(dateTime).setValue(talks);
+
+                        myRef = database.getReference("chatroom").child(myUid).child(otherUid);
+                        myRef.removeValue();
+                        Toast.makeText(ChatActivity.this, "채팅방을 나갑니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+                dlg.show();
                 return true;
 
-            case R.id.menu_item2:
-                return true;
         }
         return false;
     }
@@ -120,7 +148,7 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setWillNotDraw(false); // 스크롤바 표시
 
-        ArrayList<ChatData> chatDataArrayList = new ArrayList<>();
+        chatDataArrayList = new ArrayList<>();
         mAdapter = new ChatAdapter(chatDataArrayList);
         recyclerView.setAdapter(mAdapter);
         chatDataArrayList.clear();
@@ -180,73 +208,9 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // 채팅방 재입장 시 알림 삭제 및 비활성화
+        // 채팅방 입장 시 푸시 알림 삭제
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(0);
-        notificationManager = null;
-        channel = null;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        myRef = database.getReference("chatroom").child(myUid).child(otherUid);
-        ChildEventListener childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                // 상대방이 보낸 문자일 때 알림 수행
-                NotificationCompat.Builder builder;
-                my_intent = new Intent(getApplicationContext(), ChatActivity.class);
-
-                // 전송된 문자가 상대로부터 온 경우
-                if (snapshot.child("uid").getValue(String.class).equals(otherUid)) {
-                    String str_msg =  snapshot.child("msg").getValue(String.class);
-                    my_intent.putExtra("otherUid", otherUid);
-
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        channel = new NotificationChannel("0","channel", NotificationManager.IMPORTANCE_DEFAULT);
-                        ((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-                        builder = new NotificationCompat.Builder(ChatActivity.this, "0");
-                        pendingIntent = (PendingIntent.getActivity(ChatActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
-                    }
-                    else {
-                        builder = new NotificationCompat.Builder(ChatActivity.this);
-                        pendingIntent = (PendingIntent.getActivity(ChatActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT));
-                    }
-
-                    // 상대방 이름 추출 후 알림 세팅, 등록
-                    myRef = database.getReference("member").child("UserAccount").child(otherUid).child("name");
-                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String user_name = snapshot.getValue(String.class);
-
-                            builder.setSmallIcon(R.drawable.ic_baseline_chat_24)
-                                    .setContentTitle(user_name)                                     // 상대 이름
-                                    .setContentText(str_msg)                                        // 메시지
-                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)               // 알림 우선 순위
-                                    .setAutoCancel(true)                                            // 알림 선택 시 알림 자동 삭제
-                                    .setContentIntent(pendingIntent);                               // 알림 선택 시 채팅방으로 이동
-                            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                            notificationManager.notify(0, builder.build());
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {}
-                    });
-                }
-            }
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        };
-        myRef.addChildEventListener(childEventListener);
     }
 
     // 전송 버튼 수행
@@ -256,7 +220,6 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String edit_str = editText.getText().toString();
                 if (!edit_str.equals("")) {
-
                     Calendar calendar = Calendar.getInstance();
                     // 시차
                     // calendar.add(Calendar.HOUR_OF_DAY, 9);
