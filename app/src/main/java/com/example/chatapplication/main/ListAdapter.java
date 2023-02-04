@@ -1,6 +1,7 @@
 package com.example.chatapplication.main;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,14 +36,14 @@ public class ListAdapter extends BaseAdapter {
         }
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
-        imageView.setImageDrawable(fndInfoArrayList.get(position).getFnd_image());
+        imageView.setImageBitmap(fndInfoArrayList.get(position).getFnd_image());
         TextView fnd_name = (TextView) convertView.findViewById(R.id.textView);
         fnd_name.setText(fndInfoArrayList.get(position).getFnd_name());
 
         return convertView;
     }
 
-    public void addList(Drawable img, String name) {
+    public void addList(Bitmap img, String name) {
         FndInfo fndInfo = new FndInfo();
         fndInfo.setFnd_image(img);
         fndInfo.setFnd_name(name);

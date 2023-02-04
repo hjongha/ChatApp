@@ -1,6 +1,10 @@
 package com.example.chatapplication.main;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +20,8 @@ import androidx.core.content.ContextCompat;
 
 import com.example.chatapplication.R;
 import com.example.chatapplication.chat.ChatActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +29,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Search_Friend extends AppCompatActivity {
@@ -31,6 +41,8 @@ public class Search_Friend extends AppCompatActivity {
     DatabaseReference myRef;
     private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    File localFile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,10 +61,12 @@ public class Search_Friend extends AppCompatActivity {
                 ArrayList<String> uidList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     // 친구 데이터 추출 후 리스트에 추가
-                    listAdapter.addList(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseimg), dataSnapshot.getValue(String.class));
+                    Drawable drawable = getResources().getDrawable(R.drawable.baseimg);
+                    Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+                    listAdapter.addList(bitmap, dataSnapshot.getValue(String.class));
                     uidList.add(dataSnapshot.getKey());
+                    listAdapter.notifyDataSetChanged();
                 }
-                listAdapter.notifyDataSetChanged();
                 // 리스트 선택 시 해당 사용자와의 채팅방 개설
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -83,11 +97,13 @@ public class Search_Friend extends AppCompatActivity {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             if (dataSnapshot.getValue(String.class).contains(edit_str)) {
                                 // 친구 목록의 name에 검색 단어가 포함되면 사용자 데이터 추출 후 리스트에 추가
-                                listAdapter.addList(ContextCompat.getDrawable(Search_Friend.this, R.drawable.baseimg), dataSnapshot.getValue(String.class));
+                                Drawable drawable = getResources().getDrawable(R.drawable.baseimg);
+                                Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+                                listAdapter.addList(bitmap, dataSnapshot.getValue(String.class));
                                 uidList.add(dataSnapshot.getKey());
+                                listAdapter.notifyDataSetChanged();
                             }
                         }
-                        listAdapter.notifyDataSetChanged();
 
                         // 리스트 선택 시 해당 사용자와의 채팅방 개설
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -102,6 +118,7 @@ public class Search_Friend extends AppCompatActivity {
 
                         // 검색 결과가 없을 경우
                         if (listAdapter.getCount() == 0) {
+                            listAdapter.notifyDataSetChanged();
                             Toast.makeText(Search_Friend.this, "검색 결과가 존재하지 않습니다..", Toast.LENGTH_SHORT).show();
                         }
                     }

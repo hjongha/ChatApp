@@ -8,19 +8,99 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/linear_setting">
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="300dp"
-        android:gravity="center"
-        android:text="준비중.."
-        android:textSize="30dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="75dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="  계정 관리"
+            android:textColor="#C0C0C0"
+            android:textSize="13dp"/>
+
+
+        <TextView
+            android:id="@+id/settings_profile"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:layout_marginVertical="10dp"
+            android:text="프로필 변경"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/settings_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:layout_marginVertical="10dp"
+            android:text="이름 변경"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/settings_password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:layout_marginVertical="10dp"
+            android:text="비밀번호 변경"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/settings_logout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:layout_marginVertical="10dp"
+            android:text="로그아웃"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#999999" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="  친구 관리"
+            android:textColor="#C0C0C0"
+            android:textSize="13dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/settings_addF"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:layout_marginVertical="10dp"
+            android:text="친구 추가"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/settings_removeF"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:layout_marginVertical="10dp"
+            android:text="친구 삭제"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -83,8 +83,6 @@ public class Intro_Activity extends AppCompatActivity {
                 else {
                     String autoId = auto.getString("auto_Id", "");
                     String autoPwd = auto.getString("auto_Pwd", "");
-                    System.out.println("autoId : " + autoId);
-                    System.out.println("autoPwd : " + autoPwd);
                     mFirebaseAuth.signInWithEmailAndPassword(autoId, autoPwd).addOnCompleteListener(Intro_Activity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {

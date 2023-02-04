@@ -2,6 +2,10 @@ package com.example.chatapplication.main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +20,8 @@ import androidx.core.content.ContextCompat;
 
 import com.example.chatapplication.R;
 import com.example.chatapplication.chat.ChatActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +29,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Remove_Friend extends AppCompatActivity {
@@ -31,6 +41,8 @@ public class Remove_Friend extends AppCompatActivity {
     DatabaseReference myRef;
     private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    File localFile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,10 +61,12 @@ public class Remove_Friend extends AppCompatActivity {
                 ArrayList<String> uidList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     // 친구 데이터 추출 후 리스트에 추가
-                    listAdapter.addList(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseimg), dataSnapshot.getValue(String.class));
+                    Drawable drawable = getResources().getDrawable(R.drawable.baseimg);
+                    Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+                    listAdapter.addList(bitmap, dataSnapshot.getValue(String.class));
                     uidList.add(dataSnapshot.getKey());
+                    listAdapter.notifyDataSetChanged();
                 }
-                listAdapter.notifyDataSetChanged();
                 // 리스트 선택 시 삭제 확인 알림창 출력
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

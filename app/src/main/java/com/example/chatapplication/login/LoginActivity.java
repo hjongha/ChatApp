@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,7 +26,8 @@ import java.util.Set;
 // 로그인 액티비티
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;         // 파이어베이스 인증
-    private EditText mEtId, mEtPwd;          // 로그인 입력필드
+    private EditText mEtId, mEtPwd;             // 로그인 입력필드
+    ProgressBar progressBar;                    // 로딩 바
     private Intent intent;
     SharedPreferences auto;
 
@@ -76,12 +78,15 @@ public class LoginActivity extends AppCompatActivity {
 
         mEtId = (EditText) findViewById(R.id.et_id);
         mEtPwd = (EditText) findViewById(R.id.et_pwd);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         // 로그인 버튼
         Button btn_login = findViewById(R.id.btn_login);
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);    // 로딩 바 활성화
+
                 String strId = mEtId.getText().toString();
                 String strPwd = mEtPwd.getText().toString();
 
@@ -93,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                     mFirebaseAuth.signInWithEmailAndPassword(strId, strPwd).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressBar.setVisibility(View.GONE);   // 로딩 바 비활성화
                             if (task.isSuccessful()) {
                                 // 로그인 성공
                                 // 자동 로그인 변수, 값 저장
