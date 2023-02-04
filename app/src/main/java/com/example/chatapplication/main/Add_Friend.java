@@ -2,6 +2,10 @@ package com.example.chatapplication.main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
@@ -18,7 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.chatapplication.R;
-import com.example.chatapplication.chat.ChatActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +31,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Add_Friend extends AppCompatActivity {
@@ -34,6 +43,8 @@ public class Add_Friend extends AppCompatActivity {
     DatabaseReference myRef;
     private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    File localFile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,15 +69,15 @@ public class Add_Friend extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         ArrayList<String> uidList = new ArrayList<>();
-                        ArrayList<String> nameList = new ArrayList<>();
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             if (dataSnapshot.child("email").getValue(String.class).equals(str_Email)) {
-                                listAdapter.addList(ContextCompat.getDrawable(getApplicationContext(), R.drawable.baseimg), dataSnapshot.child("name").getValue(String.class));
-                                uidList.add(dataSnapshot.child("uid").getValue(String.class));
-                                nameList.add(dataSnapshot.child("name").getValue(String.class));
+                                Drawable drawable = getResources().getDrawable(R.drawable.baseimg);
+                                Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+                                listAdapter.addList(bitmap, dataSnapshot.child("name").getValue(String.class));
+                                uidList.add(dataSnapshot.getKey());
+                                listAdapter.notifyDataSetChanged();
                             }
                         }
-                        listAdapter.notifyDataSetChanged();
                         // 리스트 선택 시 친구 추가 확인창 출력
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
@@ -85,7 +96,7 @@ public class Add_Friend extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         myRef = database.getReference("friend").child(firebaseUser.getUid());
-                                        myRef.child(uidList.get(position)).setValue(nameList.get(position));
+                                        myRef.child(uidList.get(position)).setValue(" ");
                                         Toast.makeText(Add_Friend.this, "친구 추가가 완료되었습니다.", Toast.LENGTH_SHORT).show();
                                         finish();
                                     }

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,9 +59,6 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
 
     NotificationManager notificationManager;
-    NotificationChannel channel;
-    private PendingIntent pendingIntent;
-    Intent my_intent;
 
     String myUid, otherUid;
 
