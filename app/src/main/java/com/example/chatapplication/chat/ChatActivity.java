@@ -1,12 +1,10 @@
 package com.example.chatapplication.chat;
 
-import android.app.NotificationChannel;
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,8 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,14 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapplication.R;
-import com.example.chatapplication.login.LoginActivity;
-import com.example.chatapplication.login.ModifyPasswd;
+import com.example.chatapplication.main.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -61,6 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     NotificationManager notificationManager;
 
     String myUid, otherUid;
+    String serviceInfo_str;
 
     // MenuItem (우측 위 옵션메뉴)
     @Override
@@ -204,11 +199,29 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // baseActivity가 MainActivity가 아닐 경우
+        if ("com.example.chatapplication.chat.ChatActivity".equals(serviceInfo_str)) {
+            // ChatActivity를 종료하면 MainActivity를 실행
+            Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         // 채팅방 입장 시 푸시 알림 삭제
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(0);
+
+        // 현재 실행 중인 baseActivity가 무엇인지 체크 (푸시 알림을 통해 ChatActivity에 접속하여 MainActivity가 안켜졌을 경우를 대비)
+        ActivityManager activityManager = (ActivityManager) getSystemService(Activity.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningTaskInfo serviceInfo : activityManager.getRunningTasks(Integer.MAX_VALUE)) {
+            System.out.println("클래스 이름 : " + serviceInfo.baseActivity.getClassName());
+            serviceInfo_str = serviceInfo.baseActivity.getClassName();
+        }
     }
 
     // 전송 버튼 수행

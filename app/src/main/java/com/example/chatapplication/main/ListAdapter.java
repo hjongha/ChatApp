@@ -2,7 +2,6 @@ package com.example.chatapplication.main;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +47,13 @@ public class ListAdapter extends BaseAdapter {
         fndInfo.setFnd_image(img);
         fndInfo.setFnd_name(name);
         fndInfoArrayList.add(fndInfo);
+    }
+
+    public void setListIndex(Bitmap img, String name, int index) {
+        FndInfo fndInfo = new FndInfo();
+        fndInfo.setFnd_image(img);
+        fndInfo.setFnd_name(name);
+        fndInfoArrayList.set(index, fndInfo);
     }
 
     public void list_clear() {fndInfoArrayList.clear();} // 리스트 초기화

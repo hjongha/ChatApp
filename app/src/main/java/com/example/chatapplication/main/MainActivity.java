@@ -1,33 +1,25 @@
 package com.example.chatapplication.main;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.chatapplication.R;
-import com.example.chatapplication.chat.ChatActivity;
+import com.example.chatapplication.alarm.Alarm_Service;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 // 로그인 후 실행되는 메인 액티비티
 public class MainActivity extends AppCompatActivity {
@@ -38,20 +30,18 @@ public class MainActivity extends AppCompatActivity {
     private Fragment_ChatList frag_chatList = new Fragment_ChatList();
     private Fragment_Settings frag_settings = new Fragment_Settings();
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef;
     private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
 
-    NotificationManager notificationManager;
-    NotificationChannel channel;
     private PendingIntent pendingIntent;
     Intent my_intent;
+    private AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         // 초기 화면 frag_fndList
         setFrag(0);
@@ -76,71 +66,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 모든 채팅 상대에 대한 푸시 알림 설정
-        myRef = database.getReference("chatroom").child(firebaseUser.getUid());
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    myRef = database.getReference("chatroom").child(firebaseUser.getUid()).child(dataSnapshot.getKey());
-                    ChildEventListener childEventListener = new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                            // 상대방이 보낸 문자일 때 알림 수행
-                            NotificationCompat.Builder builder;
-                            my_intent = new Intent(getApplicationContext(), ChatActivity.class);
+        my_intent = new Intent(MainActivity.this, Alarm_Service.class);
+        my_intent.putExtra("myUid", firebaseUser.getUid());
 
-                            // 전송된 문자가 상대로부터 온 경우
-                            if (snapshot.child("uid").getValue(String.class).equals(dataSnapshot.getKey())) {
-                                String str_msg = snapshot.child("msg").getValue(String.class);
-                                my_intent.putExtra("otherUid", snapshot.child("uid").getValue(String.class));
+        if (Build.VERSION.SDK_INT >= 26) {
+            pendingIntent = (PendingIntent.getActivity(MainActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+        } else {
+            pendingIntent = (PendingIntent.getActivity(MainActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+        if (Build.VERSION.SDK_INT >= 23) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, 0, pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, 0, pendingIntent);
+        }
 
-                                if (Build.VERSION.SDK_INT >= 26) {
-                                    channel = new NotificationChannel("0", "channel", NotificationManager.IMPORTANCE_DEFAULT);
-                                    ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-                                    builder = new NotificationCompat.Builder(MainActivity.this, "0");
-                                    pendingIntent = (PendingIntent.getActivity(MainActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
-                                } else {
-                                    builder = new NotificationCompat.Builder(MainActivity.this);
-                                    pendingIntent = (PendingIntent.getActivity(MainActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT));
-                                }
-
-                                // 상대방 이름 추출 후 알림 세팅, 등록
-                                myRef = database.getReference("member").child("UserAccount").child(snapshot.child("uid").getValue(String.class)).child("name");
-                                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        String user_name = snapshot.getValue(String.class);
-
-                                        builder.setSmallIcon(R.drawable.ic_baseline_chat_24)
-                                                .setContentTitle(user_name)                                     // 상대 이름
-                                                .setContentText(str_msg)                                        // 메시지
-                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)               // 알림 우선 순위
-                                                .setAutoCancel(true)                                            // 알림 선택 시 알림 자동 삭제
-                                                .setContentIntent(pendingIntent);                               // 알림 선택 시 채팅방으로 이동
-                                        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                        notificationManager.notify(0, builder.build());
-                                    }
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {}
-                                });
-                            }
-                        }
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {}
-                    };
-                    myRef.addChildEventListener(childEventListener);
-                }
+        // 기존 서비스 실행 중인지 검사
+        Boolean serviceStart = true;
+        ActivityManager activityManager = (ActivityManager) getSystemService(Activity.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo serviceInfo : activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            System.out.println("클래스 이름 : " + serviceInfo.service.getClassName());
+            if ("com.example.chatapplication.alarm.Alarm_Service".equals(serviceInfo.service.getClassName())) {
+                System.out.println("서비스가 이미 실행 중..");
+                serviceStart = false;
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
+        }
+        if (serviceStart) {
+            startService(my_intent);
+            System.out.println("서비스 시작");
+        }
     }
 
     // 화면 전환 수행
@@ -171,6 +124,4 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
-
-
 }

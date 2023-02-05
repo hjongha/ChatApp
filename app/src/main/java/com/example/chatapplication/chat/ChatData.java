@@ -1,7 +1,5 @@
 package com.example.chatapplication.chat;
 
-import java.util.Calendar;
-
 // 채팅 정보 클래스
 public class ChatData {
     private String uid;

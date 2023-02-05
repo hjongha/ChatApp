@@ -140,9 +140,6 @@ public class Fragment_Settings extends Fragment {
         textView_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //intent = new Intent(context, Settings_Password.class);
-                //startActivity(intent);
-
                 AlertDialog.Builder dlg = new AlertDialog.Builder(getActivity());
                 EditText editText = new EditText(getActivity());
                 editText.setHint("password");
