@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApplication"
         tools:targetApi="31">
+
+        <service android:name=".alarm.Alarm_Service"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+
         <activity
             android:name=".main.MainActivity"
             android:exported="true">

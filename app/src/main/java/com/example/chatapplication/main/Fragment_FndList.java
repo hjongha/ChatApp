@@ -1,16 +1,12 @@
 package com.example.chatapplication.main;
 
-import static java.lang.Thread.sleep;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,8 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -33,7 +27,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.chatapplication.chat.ChatActivity;
 import com.example.chatapplication.R;
-import com.example.chatapplication.main.settings.Settings_Profile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,11 +39,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Timer;
 
 public class Fragment_FndList extends Fragment {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -233,8 +224,6 @@ public class Fragment_FndList extends Fragment {
                         public void onCancelled(@NonNull DatabaseError error) {}
                     });
                 }
-                progressBar.setVisibility(View.GONE);       // 로딩 바 비활성화
-
                 // 리스트 선택 시 해당 사용자와의 채팅방 개설
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -245,6 +234,7 @@ public class Fragment_FndList extends Fragment {
                         startActivity(intent);
                     }
                 });
+                progressBar.setVisibility(View.GONE);       // 로딩 바 비활성화
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
