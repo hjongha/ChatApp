@@ -17,6 +17,10 @@ import android.view.MenuItem;
 
 import com.example.chatapplication.R;
 import com.example.chatapplication.alarm.Alarm_Service;
+import com.example.chatapplication.main.fragments.Fragment_ChatList;
+import com.example.chatapplication.main.fragments.Fragment_FndList;
+import com.example.chatapplication.main.fragments.Fragment_GroupChat;
+import com.example.chatapplication.main.fragments.Fragment_Settings;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentTransaction fragmentTransaction;
     private Fragment_FndList frag_fndList = new Fragment_FndList();
     private Fragment_ChatList frag_chatList = new Fragment_ChatList();
+    private Fragment_GroupChat frag_groupChat = new Fragment_GroupChat();
     private Fragment_Settings frag_settings = new Fragment_Settings();
 
     private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
@@ -58,8 +63,11 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_chat:
                         setFrag(1);
                         break;
-                    case R.id.menu_settings:
+                    case R.id.menu_groupchat:
                         setFrag(2);
+                        break;
+                    case R.id.menu_settings:
+                        setFrag(3);
                         break;
                 }
                 return false;
@@ -106,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
                 findViewById(R.id.menu_person).setBackgroundColor(0xFFE0E0E0);
                 findViewById(R.id.menu_chat).setBackgroundColor(0xFFFFFFFF);
+                findViewById(R.id.menu_groupchat).setBackgroundColor(0xFFFFFFFF);
                 findViewById(R.id.menu_settings).setBackgroundColor(0xFFFFFFFF);
                 break;
             case 1:
@@ -113,13 +122,23 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
                 findViewById(R.id.menu_person).setBackgroundColor(0xFFFFFFFF);
                 findViewById(R.id.menu_chat).setBackgroundColor(0xFFE0E0E0);
+                findViewById(R.id.menu_groupchat).setBackgroundColor(0xFFFFFFFF);
                 findViewById(R.id.menu_settings).setBackgroundColor(0xFFFFFFFF);
                 break;
             case 2:
+                fragmentTransaction.replace(R.id.main_frame, frag_groupChat);
+                fragmentTransaction.commit();
+                findViewById(R.id.menu_person).setBackgroundColor(0xFFFFFFFF);
+                findViewById(R.id.menu_chat).setBackgroundColor(0xFFFFFFFF);
+                findViewById(R.id.menu_groupchat).setBackgroundColor(0xFFE0E0E0);
+                findViewById(R.id.menu_settings).setBackgroundColor(0xFFFFFFFF);
+                break;
+            case 3:
                 fragmentTransaction.replace(R.id.main_frame, frag_settings);
                 fragmentTransaction.commit();
                 findViewById(R.id.menu_person).setBackgroundColor(0xFFFFFFFF);
                 findViewById(R.id.menu_chat).setBackgroundColor(0xFFFFFFFF);
+                findViewById(R.id.menu_groupchat).setBackgroundColor(0xFFFFFFFF);
                 findViewById(R.id.menu_settings).setBackgroundColor(0xFFE0E0E0);
                 break;
         }

@@ -8,9 +8,16 @@
 
     <item
         android:id="@+id/menu_chat"
-       android:enabled="true"
+        android:enabled="true"
         android:icon="@drawable/ic_baseline_chat_24"
         android:title="채팅"/>
+
+    <item
+        android:id="@+id/menu_groupchat"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_groups_24"
+        android:title="채팅"/>
+
     <item
 
         android:id="@+id/menu_settings"
