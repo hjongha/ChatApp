@@ -42,6 +42,12 @@
         </activity>
 
         <activity
+            android:name=".chat.GroupChatActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+
+        <activity
             android:name="com.example.chatapplication.login.Intro_Activity"
             android:exported="true">
             <intent-filter>
@@ -59,13 +65,16 @@
         <activity android:name="com.example.chatapplication.login.JoinActivity" />
         <activity android:name="com.example.chatapplication.login.SearchActivity" />
         <activity android:name="com.example.chatapplication.login.ModifyPasswd" />
-        <activity android:name="com.example.chatapplication.main.Fragment_FndList"
+        <activity android:name="com.example.chatapplication.main.fragments.Fragment_FndList"
             android:windowSoftInputMode="adjustNothing"
             tools:ignore="Instantiatable" />
-        <activity android:name="com.example.chatapplication.main.Fragment_ChatList"
+        <activity android:name="com.example.chatapplication.main.fragments.Fragment_ChatList"
             tools:ignore="Instantiatable" />
-        <activity android:name="com.example.chatapplication.main.Fragment_Settings"
+        <activity android:name="com.example.chatapplication.main.fragments.Fragment_Settings"
             tools:ignore="Instantiatable" />
+        <activity android:name="com.example.chatapplication.main.fragments.Fragment_GroupChat"
+            tools:ignore="Instantiatable" />
+        <activity android:name="com.example.chatapplication.main.fragments.GroupChat_Add" />
         <activity android:name="com.example.chatapplication.main.Search_Friend" />
         <activity android:name="com.example.chatapplication.main.Add_Friend" />
         <activity android:name="com.example.chatapplication.main.Remove_Friend" />

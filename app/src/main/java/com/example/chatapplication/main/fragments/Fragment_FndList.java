@@ -1,4 +1,4 @@
-package com.example.chatapplication.main;
+package com.example.chatapplication.main.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +27,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.chatapplication.chat.ChatActivity;
 import com.example.chatapplication.R;
+import com.example.chatapplication.main.Add_Friend;
+import com.example.chatapplication.main.ListAdapter;
+import com.example.chatapplication.main.Remove_Friend;
+import com.example.chatapplication.main.Search_Friend;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

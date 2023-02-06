@@ -1,4 +1,4 @@
-package com.example.chatapplication.main;
+package com.example.chatapplication.main.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +28,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 public class Fragment_ChatList extends Fragment {
@@ -61,7 +63,7 @@ public class Fragment_ChatList extends Fragment {
         chatList_name.clear();
 
         ListView listView = (ListView) view.findViewById(R.id.listView_menu2);
-        ListAdapter listAdapter = new ListAdapter();
+        ChatRoom_ListAdapter listAdapter = new ChatRoom_ListAdapter();
         listView.setAdapter(listAdapter);
         listAdapter.list_clear();
 
@@ -74,18 +76,25 @@ public class Fragment_ChatList extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<String> timerList = new ArrayList<>();
+                ArrayList<String> lastmsgList = new ArrayList<>();
                 Drawable drawable = getResources().getDrawable(R.drawable.baseimg);
                 Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
 
-                // 각 채팅방의 마지막 채팅 시간을 timerList에 저장
+                // 각 채팅방의 마지막 채팅 시간을 timerList에 저장, 마지막 메시지를 lastmsgLst에 저장
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String timer_str = "";
+                    String last_msg = "";
                     for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
                         timer_str = dataSnapshot2.getKey();
+                        // 마지막 메시지가 방을 나간 메시지가 아니라면 last_msg에 저장
+                        if (!dataSnapshot2.child("msg").getValue(String.class).equals("")) {
+                            last_msg = dataSnapshot2.child("msg").getValue(String.class);
+                        }
                     }
                     timerList.add(timer_str);
+                    lastmsgList.add(last_msg);
                     // listAdapter 개수 설정
-                    listAdapter.addList(bitmap, "");
+                    listAdapter.addList(bitmap, "", "", "");
                 }
                 // timerList를 복사한 timerList2를 내림차순으로 정렬
                 ArrayList<String> timerList2 = (ArrayList<String>) timerList.clone();
@@ -106,6 +115,7 @@ public class Fragment_ChatList extends Fragment {
                     }
                 }
 
+                // 채팅방을 리스트에 최신순으로 추가
                 int sort_pos = 0;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     myRef = database.getReference("member").child("UserAccount").child(dataSnapshot.getKey()).child("name");
@@ -113,8 +123,24 @@ public class Fragment_ChatList extends Fragment {
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                            String last_time ="";
+                            String[] timer_split = new String[2];
+                            timer_split = timerList.get(finalSort_pos).split(" ");
+
+                            Calendar calendar = Calendar.getInstance();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            String dateTime = dateFormat.format(calendar.getTime());
+                            if (dateTime.equals(timer_split[0])) {
+                                // 마지막으로 전송한 메시지의 날짜가 오늘과 같은 경우
+                                last_time = timer_split[1].substring(0, timer_split[1].length()-3);
+                            }
+                            else {
+                                // 마지막으로 전송한 메시지의 날짜가 오늘과 다른 경우
+                                last_time = timer_split[0].substring(5);
+                            }
+
                             // sort_Index를 이용하여 채팅방 리스트를 내림차순으로 수정
-                            listAdapter.setListIndex(bitmap, snapshot2.getValue(String.class), sort_Index.get(finalSort_pos));
+                            listAdapter.setListIndex(bitmap, snapshot2.getValue(String.class), lastmsgList.get(finalSort_pos), last_time, sort_Index.get(finalSort_pos));
                             uidArrayList.add(dataSnapshot.getKey());
                             listAdapter.notifyDataSetChanged();
                         }

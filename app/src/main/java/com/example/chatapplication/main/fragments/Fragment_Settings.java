@@ -1,4 +1,4 @@
-package com.example.chatapplication.main;
+package com.example.chatapplication.main.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.chatapplication.R;
 import com.example.chatapplication.login.LoginActivity;
+import com.example.chatapplication.main.Add_Friend;
+import com.example.chatapplication.main.Remove_Friend;
 import com.example.chatapplication.main.settings.Settings_Profile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
