@@ -95,6 +95,7 @@ public class Fragment_ChatList extends Fragment {
                     lastmsgList.add(last_msg);
                     // listAdapter 개수 설정
                     listAdapter.addList(bitmap, "", "", "");
+                    uidArrayList.add("");
                 }
                 // timerList를 복사한 timerList2를 내림차순으로 정렬
                 ArrayList<String> timerList2 = (ArrayList<String>) timerList.clone();
@@ -141,7 +142,7 @@ public class Fragment_ChatList extends Fragment {
 
                             // sort_Index를 이용하여 채팅방 리스트를 내림차순으로 수정
                             listAdapter.setListIndex(bitmap, snapshot2.getValue(String.class), lastmsgList.get(finalSort_pos), last_time, sort_Index.get(finalSort_pos));
-                            uidArrayList.add(dataSnapshot.getKey());
+                            uidArrayList.set(sort_Index.get(finalSort_pos), dataSnapshot.getKey());
                             listAdapter.notifyDataSetChanged();
                         }
                         @Override

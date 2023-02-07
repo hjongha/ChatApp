@@ -5,11 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -20,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chatapplication.R;
-import com.example.chatapplication.chat.ChatActivity;
 import com.example.chatapplication.chat.GroupChatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -184,6 +181,7 @@ public class GroupChat_Add extends AppCompatActivity {
                         // 그룹 채팅방 생성 완료
                         Toast.makeText(GroupChat_Add.this, "그룹 채팅방이 생성되었습니다.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(GroupChat_Add.this, GroupChatActivity.class);
+                        intent.putExtra("roomKey", Integer.toString(room_num));
                         startActivity(intent);
                         finish();
                     }

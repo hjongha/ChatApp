@@ -24,6 +24,8 @@ import com.example.chatapplication.main.fragments.Fragment_Settings;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 // 로그인 후 실행되는 메인 액티비티
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef;
 
     private PendingIntent pendingIntent;
     Intent my_intent;
@@ -92,12 +96,12 @@ public class MainActivity extends AppCompatActivity {
         Boolean serviceStart = true;
         ActivityManager activityManager = (ActivityManager) getSystemService(Activity.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo serviceInfo : activityManager.getRunningServices(Integer.MAX_VALUE)) {
-            System.out.println("클래스 이름 : " + serviceInfo.service.getClassName());
             if ("com.example.chatapplication.alarm.Alarm_Service".equals(serviceInfo.service.getClassName())) {
                 System.out.println("서비스가 이미 실행 중..");
                 serviceStart = false;
             }
         }
+        // 이미 실행 중인 서비스가 없다면
         if (serviceStart) {
             startService(my_intent);
             System.out.println("서비스 시작");

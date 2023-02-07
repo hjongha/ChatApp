@@ -11,7 +11,8 @@
         android:layout_height="50dp"
         app:layout_constraintEnd_toStartOf="@id/text_test"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:translationX="10dp"/>
 
     <TextView
         android:id="@+id/text_test"
@@ -19,10 +20,11 @@
         android:layout_height="50dp"
         android:layout_marginStart="10dp"
         android:gravity="center_vertical"
-        android:text="test"
+        android:text=" "
         android:textSize="10pt"
         app:layout_constraintStart_toEndOf="@+id/image_chat"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:translationX="10dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="대화 상대 보기"
+        android:id="@+id/gc_user"
+        android:visible="false"/>
 
     <item android:title="대화 내용 삭제"
         android:id="@+id/delete_msg"/>
 
     <item android:title="채팅방 나가기"
         android:id="@+id/delete_room"/>
+
+    <item android:title="add_friend"
+        android:icon="@drawable/ic_baseline_person_add_alt_1_24"
+        android:id="@+id/addF_chat"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
 </menu>

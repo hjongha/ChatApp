@@ -23,7 +23,7 @@
             android:layout_gravity="center|top"
             android:padding="10dp"
             android:textColor="#FFFFFF"
-            android:textSize="6pt"
+            android:textSize="5pt"
             android:visibility="invisible" />
 
         <LinearLayout
@@ -38,7 +38,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="#808080"
+                android:src="@drawable/baseimg"
                 android:id="@+id/text_image"/>
 
             <LinearLayout

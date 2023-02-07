@@ -63,6 +63,27 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.item_menu, menu);
+
+        // 친구 여부 확인
+        myRef = database.getReference("friend").child(myUid);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean already_fnd = false;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (otherUid.equals(dataSnapshot.getKey())) {
+                        already_fnd = true;
+                        break;
+                    }
+                }
+                // 상대가 이미 친구가 되어있지 않다면
+                if (!already_fnd) {
+                    menu.findItem(R.id.addF_chat).setVisible(true);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
         return true;
     }
 
@@ -124,7 +145,20 @@ public class ChatActivity extends AppCompatActivity {
                 });
                 dlg.show();
                 return true;
-
+            case R.id.addF_chat:
+                // 채팅 중인 상대 친구 추가
+                myRef = database.getReference("member").child("UserAccount").child(otherUid).child("name");
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        myRef = database.getReference("friend").child(myUid).child(otherUid);
+                        myRef.setValue(snapshot.getValue(String.class));
+                        Toast.makeText(ChatActivity.this, "친구 추가가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {}
+                });
+                return true;
         }
         return false;
     }
@@ -168,7 +202,7 @@ public class ChatActivity extends AppCompatActivity {
         EditText editText = (EditText) findViewById(R.id.editText);
 
         // 전송 버튼 활성화
-        btn_set(btn_send, editText, myUid, otherUid);
+        btn_set(btn_send, editText);
 
         // 채팅 입력(DB 추가) 시 리스트 추가
         myRef = database.getReference("chatroom").child(myUid).child(otherUid);
@@ -219,13 +253,12 @@ public class ChatActivity extends AppCompatActivity {
         // 현재 실행 중인 baseActivity가 무엇인지 체크 (푸시 알림을 통해 ChatActivity에 접속하여 MainActivity가 안켜졌을 경우를 대비)
         ActivityManager activityManager = (ActivityManager) getSystemService(Activity.ACTIVITY_SERVICE);
         for (ActivityManager.RunningTaskInfo serviceInfo : activityManager.getRunningTasks(Integer.MAX_VALUE)) {
-            System.out.println("클래스 이름 : " + serviceInfo.baseActivity.getClassName());
             serviceInfo_str = serviceInfo.baseActivity.getClassName();
         }
     }
 
     // 전송 버튼 수행
-    public void btn_set(Button btn, EditText editText, String myUid, String otherUid) {
+    public void btn_set(Button btn, EditText editText) {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

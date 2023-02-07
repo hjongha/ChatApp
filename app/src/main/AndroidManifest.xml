@@ -47,6 +47,8 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
 
+        <activity android:name="com.example.chatapplication.chat.GroupChat_UserList" />
+
         <activity
             android:name="com.example.chatapplication.login.Intro_Activity"
             android:exported="true">
