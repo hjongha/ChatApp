@@ -16,7 +16,7 @@
         android:id="@+id/menu_groupchat"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_groups_24"
-        android:title="채팅"/>
+        android:title="그룹 채팅"/>
 
     <item
 

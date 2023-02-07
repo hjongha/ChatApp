@@ -2,22 +2,15 @@ package com.example.chatapplication.main.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import androidx.annotation.DrawableRes;
-import androidx.core.content.ContextCompat;
-
 import com.example.chatapplication.R;
-import com.example.chatapplication.main.FndInfo;
 
 import java.util.ArrayList;
 

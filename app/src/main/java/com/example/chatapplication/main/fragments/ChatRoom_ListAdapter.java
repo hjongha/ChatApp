@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.chatapplication.R;
-import com.example.chatapplication.main.FndInfo;
 
 import java.util.ArrayList;
 

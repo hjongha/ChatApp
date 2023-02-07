@@ -18,7 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
@@ -154,18 +153,5 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return chatDataArrayList.size();
-    }
-
-    public boolean isDateFormat(String str, String dateFormat) {
-        // str이 날짜 형식 dateFormat에 유효한지 검사하여 parse시 문제 발생으로 false를 리턴하면 날짜 형식에 맞지 않음
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-            simpleDateFormat.setLenient(false);
-            simpleDateFormat.parse(str);
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
     }
 }

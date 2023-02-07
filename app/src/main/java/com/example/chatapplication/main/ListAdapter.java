@@ -49,13 +49,6 @@ public class ListAdapter extends BaseAdapter {
         fndInfoArrayList.add(fndInfo);
     }
 
-    public void setListIndex(Bitmap img, String name, int index) {
-        FndInfo fndInfo = new FndInfo();
-        fndInfo.setFnd_image(img);
-        fndInfo.setFnd_name(name);
-        fndInfoArrayList.set(index, fndInfo);
-    }
-
     public void list_clear() {fndInfoArrayList.clear();} // 리스트 초기화
     public void remove(int i) {fndInfoArrayList.remove(i);} // 리스트 인덱스 i 삭제
 }
