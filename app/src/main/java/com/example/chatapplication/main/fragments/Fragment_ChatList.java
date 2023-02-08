@@ -131,13 +131,14 @@ public class Fragment_ChatList extends Fragment {
                             Calendar calendar = Calendar.getInstance();
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                             String dateTime = dateFormat.format(calendar.getTime());
-                            if (dateTime.equals(timer_split[0])) {
-                                // 마지막으로 전송한 메시지의 날짜가 오늘과 같은 경우
-                                last_time = timer_split[1].substring(0, timer_split[1].length()-3);
-                            }
-                            else {
-                                // 마지막으로 전송한 메시지의 날짜가 오늘과 다른 경우
-                                last_time = timer_split[0].substring(5);
+                            if (!timerList.get(finalSort_pos).equals("")) {
+                                if (dateTime.equals(timer_split[0])) {
+                                    // 마지막으로 전송한 메시지의 날짜가 오늘과 같은 경우
+                                    last_time = timer_split[1].substring(0, timer_split[1].length() - 3);
+                                } else {
+                                    // 마지막으로 전송한 메시지의 날짜가 오늘과 다른 경우
+                                    last_time = timer_split[0].substring(5);
+                                }
                             }
 
                             // sort_Index를 이용하여 채팅방 리스트를 내림차순으로 수정
