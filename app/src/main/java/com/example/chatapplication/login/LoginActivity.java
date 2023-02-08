@@ -92,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (strId.isEmpty() || strPwd.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "이메일과 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);   // 로딩 바 비활성화
                 }
                 else {
                     // 회원 확인
